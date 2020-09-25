@@ -54,19 +54,11 @@ typedef NSUInteger CDVMediaMsg;
 @property (nonatomic, copy) NSString* mediaId;
 @end
 
-@interface CDVAudioRecorder : AVAudioRecorder
-{
-    NSString* mediaId;
-}
-@property (nonatomic, copy) NSString* mediaId;
-@end
-
 @interface CDVAudioFile : NSObject
 {
     NSString* resourcePath;
     NSURL* resourceURL;
     CDVAudioPlayer* player;
-    CDVAudioRecorder* recorder;
     NSNumber* volume;
     NSNumber* rate;
 }
@@ -77,11 +69,9 @@ typedef NSUInteger CDVMediaMsg;
 @property (nonatomic, strong) NSNumber* volume;
 @property (nonatomic, strong) NSNumber* rate;
 
-@property (nonatomic, strong) CDVAudioRecorder* recorder;
-
 @end
 
-@interface CDVSound : CDVPlugin <AVAudioPlayerDelegate, AVAudioRecorderDelegate>
+@interface CDVSound : CDVPlugin <AVAudioPlayerDelegate>
 {
     NSMutableDictionary* soundCache;
     NSString* currMediaId;
@@ -100,13 +90,10 @@ typedef NSUInteger CDVMediaMsg;
 - (void)seekToAudio:(CDVInvokedUrlCommand*)command;
 - (void)release:(CDVInvokedUrlCommand*)command;
 - (void)getCurrentPositionAudio:(CDVInvokedUrlCommand*)command;
-- (void)resumeRecordingAudio:(CDVInvokedUrlCommand*)command;
-- (void)pauseRecordingAudio:(CDVInvokedUrlCommand*)command;
 
 - (BOOL)hasAudioSession;
 
 // helper methods
-- (NSURL*)urlForRecording:(NSString*)resourcePath;
 - (NSURL*)urlForPlaying:(NSString*)resourcePath;
 
 - (CDVAudioFile*)audioFileForResource:(NSString*)resourcePath withId:(NSString*)mediaId doValidation:(BOOL)bValidate forRecording:(BOOL)bRecord;
@@ -114,8 +101,6 @@ typedef NSUInteger CDVMediaMsg;
 - (BOOL)prepareToPlay:(CDVAudioFile*)audioFile withId:(NSString*)mediaId;
 - (NSDictionary*)createMediaErrorWithCode:(CDVMediaError)code message:(NSString*)message;
 
-- (void)startRecordingAudio:(CDVInvokedUrlCommand*)command;
-- (void)stopRecordingAudio:(CDVInvokedUrlCommand*)command;
 - (void)getCurrentAmplitudeAudio:(CDVInvokedUrlCommand*)command;
 
 - (void)setVolume:(CDVInvokedUrlCommand*)command;

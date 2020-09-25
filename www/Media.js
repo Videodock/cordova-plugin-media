@@ -145,34 +145,6 @@ Media.prototype.getCurrentPosition = function (success, fail) {
 };
 
 /**
- * Start recording audio file.
- */
-Media.prototype.startRecord = function () {
-    exec(null, this.errorCallback, 'Media', 'startRecordingAudio', [this.id, this.src]);
-};
-
-/**
- * Stop recording audio file.
- */
-Media.prototype.stopRecord = function () {
-    exec(null, this.errorCallback, 'Media', 'stopRecordingAudio', [this.id]);
-};
-
-/**
- * Pause recording audio file.
- */
-Media.prototype.pauseRecord = function () {
-    exec(null, this.errorCallback, 'Media', 'pauseRecordingAudio', [this.id]);
-};
-
-/**
- * Resume recording audio file.
- */
-Media.prototype.resumeRecord = function () {
-    exec(null, this.errorCallback, 'Media', 'resumeRecordingAudio', [this.id]);
-};
-
-/**
  * Release the resources.
  */
 Media.prototype.release = function () {
@@ -210,15 +182,7 @@ Media.prototype.setRate = function (rate) {
  * Get amplitude of audio.
  */
 Media.prototype.getCurrentAmplitude = function (success, fail) {
-    exec(
-        function (p) {
-            success(p);
-        },
-        fail,
-        'Media',
-        'getCurrentAmplitudeAudio',
-        [this.id]
-    );
+    // stub
 };
 
 /**
