@@ -486,7 +486,7 @@ BOOL keepAvAudioSessionAlwaysActive = NO;
 
     } else if (avPlayer != nil) {
         int32_t timeScale = avPlayer.currentItem.asset.duration.timescale;
-        CMTime timeToSeek = CMTimeMakeWithSeconds(posInSeconds, timeScale);
+        CMTime timeToSeek = CMTimeMakeWithSeconds(posInSeconds, MAX(1, timeScale));
 
         BOOL isPlaying = (avPlayer.rate > 0 && !avPlayer.error);
         BOOL isReadyToSeek = (avPlayer.status == AVPlayerStatusReadyToPlay) && (avPlayer.currentItem.status == AVPlayerItemStatusReadyToPlay);
@@ -495,6 +495,17 @@ BOOL keepAvAudioSessionAlwaysActive = NO;
         // When dealing with remote files, we can get into a situation where we start playing before AVPlayer has had the time to buffer the file to be played.
         // To avoid the app crashing in such a situation, we only seek if both the player and the player item are ready to play. If not ready, we send an error back to JS land.
         if(isReadyToSeek) {
+            if (avPlayer.currentItem.seekableTimeRanges.count == 0) {
+                return;
+            }
+
+            CMTimeRange range = [[avPlayer.currentItem.seekableTimeRanges lastObject] CMTimeRangeValue];
+            CMTime maxTime = range.duration;
+
+            if (CMTimeGetSeconds(timeToSeek) > CMTimeGetSeconds(maxTime)) {
+                timeToSeek = maxTime;
+            }
+
             [avPlayer seekToTime: timeToSeek
                  toleranceBefore: kCMTimeZero
                   toleranceAfter: kCMTimeZero
